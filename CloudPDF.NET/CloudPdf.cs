@@ -11,11 +11,9 @@ namespace CloudPDF.NET
   {
     public static string GetViewingToken(string cloudName, string accessSecret, string documentId, DateTime expiry, bool download = false, bool search = false)
     {
-      var bytes = GetBase64Bytes(accessSecret);
-
       var handler = new JsonWebTokenHandler();
        
-      var symmetricKey = new SymmetricSecurityKey(bytes) {KeyId = cloudName};
+      var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessSecret)) {KeyId = cloudName};
 
       var signingCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
 
@@ -41,27 +39,13 @@ namespace CloudPDF.NET
         ValidateIssuer = false
       });
 
+      if (!result.IsValid)
+      {
+        // go boom? //
+      }
+
       return token;
     }
 
-    private static byte[] GetBase64Bytes(string accessSecret)
-    {
-      var incoming = accessSecret
-        .Replace('_', '/')
-        .Replace('-', '+');
-
-      switch (accessSecret.Length % 4)
-      {
-        case 2:
-          incoming += "==";
-          break;
-        case 3:
-          incoming += "=";
-          break;
-      }
-
-      var bytes = Convert.FromBase64String(incoming);
-      return bytes;
-    }
   }
 }
