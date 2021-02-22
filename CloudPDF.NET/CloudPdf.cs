@@ -87,9 +87,9 @@ namespace CloudPDF.NET
           var upload = JsonConvert.DeserializeObject<CloudPDFUpload>(content);
           if (upload != null)
           {
-            return new  CloudPDFResponse<CloudPDFUpload>() {Success = true, Payload = upload};
+            return new  CloudPDFResponse<CloudPDFUpload>{Success = true, Payload = upload};
           }
-          return new  CloudPDFResponse<CloudPDFUpload>() {Success = false, ErrorMessage = "The document uploaded successfully but we could not deserialize the response. Please contact cloudpdf with an error report."};
+          return new  CloudPDFResponse<CloudPDFUpload> {Success = false, ErrorMessage = "The document uploaded successfully but we could not deserialize the response. Please contact cloudpdf with an error report."};
         }
 
         var error = JsonConvert.DeserializeObject<CloudPDFUploadError>(content);
